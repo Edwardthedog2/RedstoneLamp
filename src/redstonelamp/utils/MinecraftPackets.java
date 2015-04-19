@@ -94,7 +94,7 @@ public class MinecraftPackets {
 	public static int SignUpdatePacket = 0xb6;
 	public static int AdventureSettingsPacket = 0xb7;
 	
-	public int[] LoginPacket() {
+	public static int[] LoginPacket() {
 		int[] array = {
 				ID_CONNECTED_PING_OPEN_CONNECTIONS,
 				ID_UNCONNECTED_PING_OPEN_CONNECTIONS_1,
@@ -125,7 +125,7 @@ public class MinecraftPackets {
 		return array;
 	}
 	
-	public int[] NACK_ACK_Packet() {
+	public static int[] NACK_ACK_Packet() {
 		int[] array = {
 				NACK,
 				ACK
@@ -133,7 +133,7 @@ public class MinecraftPackets {
 		return array;
 	}
 	
-	public int[] EncapsulatedLoginPacket() {
+	public static int[] EncapsulatedLoginPacket() {
 		int[] array = {
 				ClientConnect,
 				ServerHandshake,
@@ -143,7 +143,7 @@ public class MinecraftPackets {
 		return array;
 	}
 	
-	public int[] PingPongPacket() {
+	public static int[] PingPongPacket() {
 		int[] array = {
 				PingPacket,
 				PongPacket
@@ -151,7 +151,7 @@ public class MinecraftPackets {
 		return array;
 	}
 	
-	public int[] DATA_Packet() {
+	public static int[] DATA_Packet() {
 		int[] array = {
 				LoginPacket,
 				LoginStatusPacket,
