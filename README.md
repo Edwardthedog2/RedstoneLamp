@@ -7,7 +7,6 @@ MinecraftPE Server Software
 		- [x] 0x02 - ID_UNCONNECTED_PING_OPEN_CONNECTIONS_1
 		- [x] 0x05 - ID_OPEN_CONNECTION_REQUEST_1
 		- [x] 0x07 - ID_OPEN_CONNECTION_REPLY_2
-		
 	- [x] Handle Data Packets
 		- [x] 0x84 - CustomPacket #5
 		- [x] 0x85 - CustomPacket #6
@@ -21,17 +20,15 @@ MinecraftPE Server Software
 		- [x] 0x8D - CustomPacket #14
 		- [x] 0x8E - CustomPacket #15
 		- [x] 0x8F - CustomPacket #16
-		
 	-[ ] Send Packets
 		- [ ]Chunk Sending
 		- [ ] Other Needed Packets
-		
 	- [ ] Accept Packets
 	- [ ] Correct Protocol Number
 	
-[ ] Implement Items
-[ ] Implement Blocks
-[ ] Level Generation
-[ ] Plugin Loading
-[ ] Command Registration
-[ ] Command Handling
+- [ ] Implement Items
+- [ ] Implement Blocks
+- [ ] Level Generation
+- [ ] Plugin Loading
+- [ ] Command Registration
+- [ ] Command Handling
