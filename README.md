@@ -1,4 +1,4 @@
-# RedstoneLamp
+# RedstoneLamp	[![Build Status](https://travis-ci.org/RedstoneLamp/RedstoneLamp.svg?branch=new)](https://travis-ci.org/RedstoneLamp/RedstoneLamp)
 MinecraftPE Server Software
 
 
