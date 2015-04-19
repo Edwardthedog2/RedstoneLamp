@@ -17,7 +17,7 @@
 	</target>
 	
 	<target name="dist" depends="compile" description="Generate the distribution">
-		<mkdir dir="${dist}/lib"/>
+		<mkdir dir="${dist}/builds"/>
 		<jar jarfile="${dist}/builds/Redstonelamp-${DSTAMP}.jar" basedir="${build}"/>
 	</target>
 	
