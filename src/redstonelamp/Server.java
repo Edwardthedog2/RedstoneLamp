@@ -1,217 +1,41 @@
 package redstonelamp;
 
-import java.io.File;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import redstonelamp.cmd.CommandRegistrationManager;
 import redstonelamp.logger.Logger;
-import redstonelamp.plugin.PluginManager;
+import redstonelamp.utils.StringCast;
 
-public class Server {
+public class Server extends Thread {
 	private String address, name, motd, generator_settings, level_name, seed, level_type, rcon_pass;
 	private int port, spawn_protection, max_players, gamemode, difficulty;
 	private boolean whitelist, announce_player_achievements, allow_cheats, spawn_animals, spawn_mobs, force_gamemode, hardcore, pvp, query, rcon, auto_save;
 	
-	private boolean running = false;
-	
-	private CommandRegistrationManager commandManager;
-	private PluginManager pluginManager;
-	
-	public Server(String name, String motd, int port, boolean whitelist, boolean announce_player_achievements, int spawn_protection, int max_players, boolean allow_cheats, boolean spawn_animals, boolean spawn_mobs, int gamemode, boolean force_gamemode, boolean hardcore, boolean pvp, int difficulty, String generator_settings, String level_name, String seed, String level_type, boolean query, boolean rcon, String rcon_pass, boolean auto_save) {
-		if(!this.running) {
-			Thread.currentThread().setName("RedstoneLamp");
-			this.name = name;
-			this.motd = motd;
-			this.port = port;
-			this.whitelist = whitelist;
-			this.announce_player_achievements = announce_player_achievements;
-			this.spawn_protection = spawn_protection;
-			this.max_players = max_players;
-			this.allow_cheats = allow_cheats;
-			this.spawn_animals = spawn_animals;
-			this.spawn_mobs = spawn_mobs;
-			this.gamemode = gamemode;
-			this.force_gamemode = force_gamemode;
-			this.hardcore = hardcore;
-			this.pvp = pvp;
-			this.difficulty = difficulty;
-			this.generator_settings = generator_settings;
-			this.level_name = level_name;
-			this.seed = seed;
-			this.level_type = level_type;
-			this.query = query;
-			this.rcon = rcon;
-			this.rcon_pass = rcon_pass;
-			this.auto_save = auto_save;
-			
-			commandManager = new CommandRegistrationManager();
-			
-			try {
-				InetAddress ip = InetAddress.getLocalHost();
-				this.address = ip.getHostAddress();
-			} catch (UnknownHostException e) {
-				this.getLogger().fatal("Unable to determine system IP!");
-			}
-			this.getLogger().info("Starting Minecraft: PE server on " + this.getAddress() + ":" + this.getPort());
-			this.running = true;
-			this.start();
-			this.getLogger().info("This server is running " + RedstoneLamp.SOFTWARE + " version " + RedstoneLamp.VERSION + " \"" + RedstoneLamp.CODENAME + "\" (API " + RedstoneLamp.API_VERSION + ")");
-		}
+	public Server(String name, String motd, String port, String whitelist, String announce_player_achievements, String spawn_protection, String max_players, String allow_cheats, String spawn_animals, String spawn_mobs, String gamemode, String force_gamemode, String hardcore, String pvp, String difficulty, String generator_settings, String level_name, String seed, String level_type, String query, String rcon, String rcon_pass, String auto_save) {
+		Thread.currentThread().setName("RedstoneLamp");
+		this.name							= name;
+		this.motd							= motd;
+		this.port							= StringCast.toInt(port);
+		this.whitelist						= StringCast.toBoolean(whitelist);
+		this.announce_player_achievements	= StringCast.toBoolean(announce_player_achievements);
+		this.spawn_protection				= StringCast.toInt(spawn_protection);
+		this.max_players					= StringCast.toInt(max_players);
+		this.allow_cheats					= StringCast.toBoolean(allow_cheats);
+		this.spawn_animals					= StringCast.toBoolean(spawn_animals);
+		this.spawn_mobs						= StringCast.toBoolean(spawn_mobs);
+		this.gamemode						= StringCast.toInt(gamemode);
+		this.force_gamemode					= StringCast.toBoolean(force_gamemode);
+		this.hardcore						= StringCast.toBoolean(hardcore);
+		this.pvp							= StringCast.toBoolean(pvp);
+		this.difficulty						= StringCast.toInt(difficulty);
+		this.generator_settings				= generator_settings;
+		this.level_name						= level_name;
+		this.seed							= seed;
+		this.level_type						= level_type;
+		this.query							= StringCast.toBoolean(query);
+		this.rcon							= StringCast.toBoolean(rcon);
+		this.rcon_pass						= rcon_pass;
+		this.auto_save						= StringCast.toBoolean(auto_save);
 	}
 	
-	private void start() {
-		
-	}
-	
-	/*
-	 * @return String ServerIP
-	 */
-	public String getAddress() {
-		return this.address;
-	}
-	
-	/*
-	 * @return String ServerPort
-	 */
-	public int getPort() {
-		return this.port;
-	}
-	
-	/*
-	 * @return String ServerName
-	 */
-	public String getName() {
-		return this.name;
-	}
-	
-	/*
-	 * @return String MOTD
-	 */
-	public String getMOTD() {
-		return this.motd;
-	}
-	
-	/*
-	 * @return boolean Whitelisted
-	 */
-	public boolean isWhitelisted() {
-		return this.whitelist;
-	}
-	
-	/*
-	 * @return int MaxPlayers
-	 */
-	public int getMaxPlayers() {
-		return this.max_players;
-	}
-	
-	/*
-	 * @return boolean Cheats
-	 */
-	public boolean cheatsEnabled() {
-		return this.allow_cheats;
-	}
-	
-	/*
-	 * @return boolean Animals
-	 */
-	public boolean spawnAnimals() {
-		return this.spawn_animals;
-	}
-	
-	/*
-	 * @return boolean Mobs
-	 */
-	public boolean spawnMobs() {
-		return this.spawn_mobs;
-	}
-	
-	/*
-	 * @return int Gamemode
-	 */
-	public int getGamemode() {
-		return this.gamemode;
-	}
-	
-	/*
-	 * @return boolean Hardcore
-	 */
-	public boolean isHardcore() {
-		return this.hardcore;
-	}
-	
-	/*
-	 * @return boolean PvP
-	 */
-	public boolean isPvPEnabled() {
-		return this.pvp;
-	}
-	
-	/*
-	 * @return int Difficulty
-	 */
-	public int getDifficulty() {
-		return this.difficulty;
-	}
-	
-	/*
-	 * @return String LevelName
-	 */
-	public String getLevelName() {
-		return this.level_name;
-	}
-	
-	/*
-	 * @return String seed
-	 */
-	public String getSeed() {
-		return this.seed;
-	}
-	
-	/*
-	 * @return boolean AutoSave
-	 */
-	public boolean isAutoSaveEnabled() {
-		return this.auto_save;
-	}
-	
-	/*
-	 * Stops the server
-	 */
-	public void stop() {
-		if(this.running)
-			new File("./plugins/cache/").delete();
-		System.exit(1);
-	}
-	
-	/*
-	 * @param boolean force
-	 */
-	public void stop(boolean force) {
-		if(!force)
-			this.stop();
-		System.exit(1);
-	}
-
-	/*
-	 * @return Logger
-	 */
 	public Logger getLogger() {
 		return new Logger();
-	}
-	
-	/*
-	 * @return CommandRegistrationManager
-	 */
-	public CommandRegistrationManager getCommandRegistrationManager() {
-		return commandManager;
-	}
-	
-	/*
-	 * @return PluginManager
-	 */
-	public PluginManager getPluginManager() {
-		return pluginManager;
 	}
 }
