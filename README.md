@@ -1,6 +1,16 @@
 # RedstoneLamp
 MinecraftPE Server Software
 
+
+#Links
+RedstoneLamp - http://RedstoneLamp.net
+
+RedstoneLamp Forums - http://forums.RedstoneLamp.net
+
+RedstoneLamo Documentation - http://docs.RedstoneLamp.net
+
+
+# TODO
 - [ ] Working Packet Sending/Handling
 
 	- [x] Handle Login Packets
@@ -20,6 +30,7 @@ MinecraftPE Server Software
 		- [x] 0x8D - CustomPacket #14
 		- [x] 0x8E - CustomPacket #15
 		- [x] 0x8F - CustomPacket #16
+		
 	-[ ] Send Packets
 		- [ ]Chunk Sending
 		- [ ] Other Needed Packets
