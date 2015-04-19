@@ -17,7 +17,7 @@ public class Server extends Thread {
 	private int port, spawn_protection, max_players, gamemode, difficulty;
 	private boolean whitelist, announce_player_achievements, allow_cheats, spawn_animals, spawn_mobs, force_gamemode, hardcore, pvp, query, rcon, auto_save;
 	
-	private boolean isListening = false;
+	private boolean isListening;
 	private RedstoneLamp redstone;
 	public DatagramSocket socket;
 	private DatagramPacket packet;
@@ -27,6 +27,7 @@ public class Server extends Thread {
 	public Player[] players;
 	
 	public Server(RedstoneLamp redstonelamp, String name, String motd, String port, String whitelist, String announce_player_achievements, String spawn_protection, String max_players, String allow_cheats, String spawn_animals, String spawn_mobs, String gamemode, String force_gamemode, String hardcore, String pvp, String difficulty, String generator_settings, String level_name, String seed, String level_type, String query, String rcon, String rcon_pass, String auto_save) throws SocketException {
+		isListening = false;
 		Thread.currentThread().setName("RedstoneLamp");
 		this.name = name;
 		this.motd = motd;
@@ -57,7 +58,7 @@ public class Server extends Thread {
 		} catch (UnknownHostException e) {
 			this.getLogger().fatal("Unable to determine system IP!");
 		}
-		this.getLogger().info("Starting Minecraft: PE server on " + this.getAddress() + ":" + this.getPort());
+		this.getLogger().info("Starting Minecraft: PE Server ");
 		socket = new DatagramSocket(StringCast.toInt(port));
 		socket.getBroadcast();
 		serverID = rnd.nextLong();

@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import raknet.Packet;
 import raknet.PacketHandler;
 import redstonelamp.utils.Hex;
+import redstonelamp.utils.MinecraftPacket;
 
 public class Data03 extends Packet {
 	private long clientID;
