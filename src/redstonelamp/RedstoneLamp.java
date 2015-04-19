@@ -1,6 +1,5 @@
 package redstonelamp;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -17,69 +16,65 @@ public class RedstoneLamp implements Runnable {
 	public static String STAGE = "DEVELOPMENT";
 	public static int API_VERSION = 2;
 	
-	private static RedstoneLampProperties rlp = new RedstoneLampProperties();
+	private static RedstoneLamp redstone;
 	public static Logger logger = new Logger();
+	private static RedstoneLampProperties rlp = new RedstoneLampProperties();
 	public static Server server;
-	private boolean serverRunning;
-	public boolean serverStopped;
+	private boolean running;
+	public boolean stopped;
 	public ArrayList<Player> players;
 	public HashMap<Integer, Long> entityIDList = new HashMap<Integer, Long>();
 	private int connectedPlayers;
 	
 	public static boolean DEBUG;
+	public static boolean DEVELOPER;
 	
 	public RedstoneLamp() {
-		serverRunning = true;
-		serverStopped = false;
+		running = true;
+		stopped = false;
 		connectedPlayers = 0;
 		players = new ArrayList<Player>();
 	}
 	
 	public static void main(String[] args) {
-		try {
-			rlp.load();
-			DEBUG = StringCast.toBoolean(rlp.get("DEBUG_MODE"));
-		} catch (IOException e) {
-			if(DEBUG)
-				e.printStackTrace();
-			logger.fatal("Unable to load Server Properties file!");
-		}
-		RedstoneLamp redstone = new RedstoneLamp();
+		rlp.load();
+		DEBUG = StringCast.toBoolean(rlp.get("DEBUG_MODE"));
+		DEVELOPER = StringCast.toBoolean(rlp.get("DEVELOPER_MODE"));
+		redstone = new RedstoneLamp();
 		redstone.run();
 	}
 	
+	public void initiateShutdown() {
+		running = false;
+		System.exit(0);
+	}
+	
 	public void run() {
-		if(startServer()) {
+		if (start()) {
 			long ticks = 0;
-			while(serverRunning) {
+			while (!running) {
 				try {
 					Thread.sleep(100);
-				} catch(InterruptedException e) {
-					//logger.log(Level.SEVERE, null, e);
-				}
+				} catch (InterruptedException e) {}
 				ticks++;
 				if (ticks % 100 == 0) {
 					Runtime.getRuntime().gc();
-					//logger.info("Connected players: " + players.size());
 				}
 			}
 		}
 	}
-
-	private boolean startServer() {
+	
+	private boolean start() {
 		try {
-			server = new Server(rlp.get("name"), rlp.get("motd"), rlp.get("server-port"), rlp.get("whitelist"), rlp.get("announce-player-achievements"), rlp.get("spawn-protection"), rlp.get("max-players"), rlp.get("allow-cheats"), rlp.get("spawn-animals"), rlp.get("spawn-mobs"), rlp.get("gamemode"), rlp.get("force-gamemode"), rlp.get("hardcore"), rlp.get("pvp"), rlp.get("difficulty"), rlp.get("generator-settings"), rlp.get("level-name"), rlp.get("level-seed"), rlp.get("levet-type"), rlp.get("enable-query"), rlp.get("enable-rcon"), rlp.get("rcon.password"), rlp.get("auto-save"));
+			Server server = new Server(redstone, rlp.get("name"), rlp.get("motd"), rlp.get("server-port"), rlp.get("whitelist"), rlp.get("announce-player-achievements"), rlp.get("spawn-protection"), rlp.get("max-players"), rlp.get("allow-cheats"), rlp.get("spawn-animals"), rlp.get("spawn-mobs"), rlp.get("gamemode"), rlp.get("force-gamemode"), rlp.get("hardcore"), rlp.get("pvp"), rlp.get("difficulty"), rlp.get("generator-settings"), rlp.get("level-name"), rlp.get("level-seed"), rlp.get("levet-type"), rlp.get("enable-query"), rlp.get("enable-rcon"), rlp.get("rcon.password"), rlp.get("auto-save"));
+			server.start();
+			server.getLogger().info("Done! For help, type \"help\" or \"?\"");
 		} catch (SocketException e) {
-			if(DEBUG)
+			if (DEVELOPER)
 				e.printStackTrace();
-			logger.fatal("***** COULDN'T BIND TO PORT *****");
+			logger.fatal("***** COULDN'T BIND TO PORT " + StringCast.toInt(rlp.get("server-port")) + " *****");
 		}
 		return true;
-	}
-
-	public void initiateShutdown() {
-		serverRunning = false;
-		System.exit(0);
 	}
 	
 	public void addPlayer(InetAddress i, int p, Long cid) {
@@ -98,7 +93,7 @@ public class RedstoneLamp implements Runnable {
 			logger.info("Connected players: " + players.size());
 		}
 	}
-
+	
 	public void removePlayer(InetAddress i, int p) {
 		for (int j = 0; j < players.size(); j++) {
 			Player player = players.get(j);
@@ -111,12 +106,10 @@ public class RedstoneLamp implements Runnable {
 		}
 		System.out.println("Connected players: " + players.size() + " " + entityIDList.size());
 	}
-
+	
 	public Player currentPlayer(InetAddress i, int p) {
 		for (Player player : players) {
-			if (player.clientAddress.equals(i) && player.clientPort == p) {
-				return player;
-			}
+			if (player.clientAddress.equals(i) && player.clientPort == p) { return player; }
 		}
 		return null;
 	}
@@ -124,9 +117,9 @@ public class RedstoneLamp implements Runnable {
 	public Integer addEntityID(Long cid) {
 		boolean b = false;
 		int newID = 0;
-		while(!b) {
+		while (!b) {
 			newID = 1000 + (int) (Math.random() * 1050);
-			if(!entityIDList.containsKey(newID)) {
+			if (!entityIDList.containsKey(newID)) {
 				entityIDList.put(newID, cid);
 				b = true;
 			}

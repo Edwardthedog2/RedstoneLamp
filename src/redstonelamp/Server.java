@@ -1,6 +1,5 @@
 package redstonelamp;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -18,8 +17,8 @@ public class Server extends Thread {
 	private int port, spawn_protection, max_players, gamemode, difficulty;
 	private boolean whitelist, announce_player_achievements, allow_cheats, spawn_animals, spawn_mobs, force_gamemode, hardcore, pvp, query, rcon, auto_save;
 	
-	private boolean isListening;
-	private RedstoneLamp redstone = new RedstoneLamp();
+	private boolean isListening = false;
+	private RedstoneLamp redstone;
 	public DatagramSocket socket;
 	private DatagramPacket packet;
 	public long serverID;
@@ -27,8 +26,7 @@ public class Server extends Thread {
 	public long start;
 	public Player[] players;
 	
-	public Server(String name, String motd, String port, String whitelist, String announce_player_achievements, String spawn_protection, String max_players, String allow_cheats, String spawn_animals, String spawn_mobs, String gamemode, String force_gamemode, String hardcore, String pvp, String difficulty, String generator_settings, String level_name, String seed, String level_type, String query, String rcon, String rcon_pass, String auto_save) throws SocketException {
-		isListening = false;
+	public Server(RedstoneLamp redstonelamp, String name, String motd, String port, String whitelist, String announce_player_achievements, String spawn_protection, String max_players, String allow_cheats, String spawn_animals, String spawn_mobs, String gamemode, String force_gamemode, String hardcore, String pvp, String difficulty, String generator_settings, String level_name, String seed, String level_type, String query, String rcon, String rcon_pass, String auto_save) throws SocketException {
 		Thread.currentThread().setName("RedstoneLamp");
 		this.name = name;
 		this.motd = motd;
@@ -77,6 +75,8 @@ public class Server extends Thread {
 				socket.receive(packet);
 				socket.setSoTimeout(0);
 			} catch(Exception e) {
+				if(RedstoneLamp.DEVELOPER)
+					e.printStackTrace();
 				this.getLogger().debug("No packets recieved in the last 5 seconds");
 			}
 			
@@ -90,20 +90,6 @@ public class Server extends Thread {
 				pkt.setPort(packet.getPort());
 				new Thread(new PacketHandler(redstone, this, pkt)).start();
 			}
-		}
-	}
-	
-	public void sendPacket(ByteBuffer response, Player player) {
-		DatagramPacket responsePacket = null;
-		if (response != null) {
-		    try {
-				responsePacket = new DatagramPacket(response.array(), response.capacity());
-				responsePacket.setAddress(player.clientAddress);
-				responsePacket.setPort(player.clientPort);
-				socket.send(responsePacket);
-		    } catch (IOException e) {
-		    	e.printStackTrace();
-		    }
 		}
 	}
 	

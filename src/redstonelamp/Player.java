@@ -18,7 +18,7 @@ public class Player {
 	public short blockID;
 	public short metadata;
 	public boolean isConnected;
-
+	
 	public Player(InetAddress i, int p, int eid, long cid) {
 		clientAddress = i;
 		clientPort = p;
@@ -36,11 +36,11 @@ public class Player {
 	public int getPacketCount() {
 		return packetCount++;
 	}
-
+	
 	public int getDataCount() {
 		return dataCount++;
 	}
-
+	
 	public void setClientID(long cid) {
 		clientID = cid;
 	}

@@ -22,12 +22,14 @@ public class StringCast {
 		try { 
 			Integer.parseInt(string); 
 		} catch(NumberFormatException e) {
-			if(RedstoneLamp.DEBUG)
+			if(RedstoneLamp.DEVELOPER)
 				e.printStackTrace();
+			RedstoneLamp.logger.error("There was a NumberFormatException!");
 	    	return false; 
 		} catch(NullPointerException e) {
-			if(RedstoneLamp.DEBUG)
+			if(RedstoneLamp.DEVELOPER)
 				e.printStackTrace();
+			RedstoneLamp.logger.error("There was a NullPointerException!");
 	    	return false;
 		}
 		return true;
@@ -38,11 +40,11 @@ public class StringCast {
 		try { 
 			number = Integer.parseInt(string); 
 		} catch(NumberFormatException e) {
-			if(RedstoneLamp.DEBUG)
+			if(RedstoneLamp.DEVELOPER)
 				e.printStackTrace();
 	    	RedstoneLamp.logger.fatal("Failed to cast String to int!"); 
 		} catch(NullPointerException e) {
-			if(RedstoneLamp.DEBUG)
+			if(RedstoneLamp.DEVELOPER)
 				e.printStackTrace();
 			RedstoneLamp.logger.fatal("Failed to cast String to int!"); 
 		}
