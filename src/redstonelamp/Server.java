@@ -60,7 +60,7 @@ public class Server extends Thread {
 			this.getLogger().fatal("Unable to determine system IP!");
 		}
 		this.getLogger().info("Opening server on " + this.address + ":" + this.port);
-		this.getLogger().info("This server is running " + RedstoneLamp.SOFTWARE + " version " + RedstoneLamp.VERSION + " \"" + RedstoneLamp.CODENAME + "\"  (API " + RedstoneLamp.API_VERSION + ")");
+		this.getLogger().info("This server is running " + RedstoneLamp.SOFTWARE + " version " + RedstoneLamp.VERSION + " \"" + RedstoneLamp.CODENAME + "\" (API " + RedstoneLamp.API_VERSION + ")");
 		this.getLogger().info(RedstoneLamp.SOFTWARE + " is distributed under the " + RedstoneLamp.LICENSE);
 		socket = new DatagramSocket(StringCast.toInt(port));
 		socket.getBroadcast();
@@ -81,8 +81,7 @@ public class Server extends Thread {
 				packetSize = packet.getLength();
 			} catch(Exception e) {
 				if(RedstoneLamp.DEVELOPER)
-					e.printStackTrace();
-				this.getLogger().debug("No packets recieved in the last 5 seconds");
+					this.getLogger().debug("No packets recieved in the last 5 seconds");
 			}
 			
 			if(packetSize > 0) {
