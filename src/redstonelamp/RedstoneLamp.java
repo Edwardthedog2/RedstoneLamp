@@ -11,11 +11,13 @@ import redstonelamp.utils.RedstoneLampProperties;
 import redstonelamp.utils.StringCast;
 
 public class RedstoneLamp implements Runnable {
+	public static String MC_VERSION = "0.11.0";
 	public static String SOFTWARE = "RedstoneLamp";
 	public static String VERSION = "1.1.0";
 	public static String CODENAME = "Pumpkin Seeds";
 	public static String STAGE = "DEVELOPMENT";
 	public static int API_VERSION = 2;
+	public static String LICENSE = "GNU GENERAL PUBLIC LICENSE";
 	
 	private static RedstoneLamp redstone;
 	public static Logger logger = new Logger();

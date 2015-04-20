@@ -52,13 +52,16 @@ public class Server extends Thread {
 		this.rcon = StringCast.toBoolean(rcon);
 		this.rcon_pass = rcon_pass;
 		this.auto_save = StringCast.toBoolean(auto_save);
+		this.getLogger().info("Starting Minecraft: PE Server v" + this.getMCVersion());
 		try {
 			InetAddress ip = InetAddress.getLocalHost();
 			this.address = ip.getHostAddress();
 		} catch (UnknownHostException e) {
 			this.getLogger().fatal("Unable to determine system IP!");
 		}
-		this.getLogger().info("Starting Minecraft: PE Server ");
+		this.getLogger().info("Opening server on " + this.address + ":" + this.port);
+		this.getLogger().info("This server is running " + RedstoneLamp.SOFTWARE + " version " + RedstoneLamp.VERSION + " \"" + RedstoneLamp.CODENAME + "\"  (API " + RedstoneLamp.API_VERSION + ")");
+		this.getLogger().info(RedstoneLamp.SOFTWARE + " is distributed under the " + RedstoneLamp.LICENSE);
 		socket = new DatagramSocket(StringCast.toInt(port));
 		socket.getBroadcast();
 		serverID = rnd.nextLong();
@@ -75,6 +78,7 @@ public class Server extends Thread {
 				socket.setSoTimeout(5000);
 				socket.receive(packet);
 				socket.setSoTimeout(0);
+				packetSize = packet.getLength();
 			} catch(Exception e) {
 				if(RedstoneLamp.DEVELOPER)
 					e.printStackTrace();
@@ -94,14 +98,14 @@ public class Server extends Thread {
 		}
 	}
 	
-	/*
+	/**
 	 * @return String ServerIP
 	 */
 	public String getAddress() {
 		return address;
 	}
 	
-	/*
+	/**
 	 * @return String ServerPort
 	 */
 	public int getPort() {
@@ -109,105 +113,112 @@ public class Server extends Thread {
 	}
 	
 	
-	/*
+	/**
 	 * @return String MOTD
 	 */
 	public String getMOTD() {
 		return motd;
 	}
 	
-	/*
+	/**
 	 * @return boolean Whitelisted
 	 */
 	public boolean isWhitelisted() {
 		return whitelist;
 	}
 	
-	/*
+	/**
 	 * @return int MaxPlayers
 	 */
 	public int getMaxPlayers() {
 		return max_players;
 	}
 	
-	/*
+	/**
 	 * @return boolean Cheats
 	 */
 	public boolean cheatsEnabled() {
 		return allow_cheats;
 	}
 	
-	/*
+	/**
 	 * @return boolean Animals
 	 */
 	public boolean spawnAnimals() {
 		return spawn_animals;
 	}
 	
-	/*
+	/**
 	 * @return boolean Mobs
 	 */
 	public boolean spawnMobs() {
 		return spawn_mobs;
 	}
 	
-	/*
+	/**
 	 * @return int Gamemode
 	 */
 	public int getGamemode() {
 		return gamemode;
 	}
 	
-	/*
+	/**
 	 * @return boolean Hardcore
 	 */
 	public boolean isHardcore() {
 		return hardcore;
 	}
 	
-	/*
+	/**
 	 * @return boolean PvP
 	 */
 	public boolean isPvPEnabled() {
 		return pvp;
 	}
 	
-	/*
+	/**
 	 * @return int Difficulty
 	 */
 	public int getDifficulty() {
 		return difficulty;
 	}
 	
-	/*
+	/**
 	 * @return String LevelName
 	 */
 	public String getLevelName() {
 		return level_name;
 	}
 	
-	/*
+	/**
 	 * @return String seed
 	 */
 	public String getSeed() {
 		return seed;
 	}
 	
-	/*
+	/**
 	 * @return boolean AutoSave
 	 */
 	public boolean isAutoSaveEnabled() {
 		return auto_save;
 	}
 	
-	/*
+	/**
 	 * @return long ID
 	 */
 	public long getServerID() {
 		return serverID;
 	}
 	
-	/*
+	/**
+	 * @return String MC_VERSION
+	 */
+	public String getMCVersion() {
+		return RedstoneLamp.MC_VERSION;
+	}
+	
+	/**
 	 * @return Logger
 	 */
 	public Logger getLogger() {
