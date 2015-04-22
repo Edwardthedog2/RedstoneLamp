@@ -42,7 +42,7 @@ public class Data03 extends Packet {
 		response.put((byte) 0xfe);
 		response.put((byte) 0xcd);
 		response.putShort((short) clientPort);
-		for (int i = 0; i < 10; i++) {
+		for(int i = 0; i < 10; i++) {
 			response.put(Hex.intToBytes(4, 3));
 			response.putInt(0xffffffff);
 		}

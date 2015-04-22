@@ -19,37 +19,37 @@ public class StringCast {
 	}
 	
 	public static boolean isInt(String string) {
-		try { 
-			Integer.parseInt(string); 
+		try {
+			Integer.parseInt(string);
 		} catch(NumberFormatException e) {
 			if(RedstoneLamp.DEVELOPER)
 				e.printStackTrace();
 			RedstoneLamp.logger.error("There was a NumberFormatException!");
-	    	return false; 
+			return false;
 		} catch(NullPointerException e) {
 			if(RedstoneLamp.DEVELOPER)
 				e.printStackTrace();
 			RedstoneLamp.logger.error("There was a NullPointerException!");
-	    	return false;
+			return false;
 		}
 		return true;
 	}
 	
 	public static int toInt(String string) {
 		int number = 827492917;
-		try { 
-			number = Integer.parseInt(string); 
+		try {
+			number = Integer.parseInt(string);
 		} catch(NumberFormatException e) {
 			if(RedstoneLamp.DEVELOPER)
 				e.printStackTrace();
-	    	RedstoneLamp.logger.fatal("Failed to cast String to int!"); 
+			RedstoneLamp.logger.fatal("Failed to cast String to int!");
 		} catch(NullPointerException e) {
 			if(RedstoneLamp.DEVELOPER)
 				e.printStackTrace();
-			RedstoneLamp.logger.fatal("Failed to cast String to int!"); 
+			RedstoneLamp.logger.fatal("Failed to cast String to int!");
 		}
 		if(number == 827492917)
-			RedstoneLamp.logger.fatal("Failed to cast String to int!"); 
+			RedstoneLamp.logger.fatal("Failed to cast String to int!");
 		return number;
 	}
 }

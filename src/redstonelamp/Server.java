@@ -1,21 +1,40 @@
 package redstonelamp;
 
+import java.io.File;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Random;
 
 import raknet.PacketHandler;
+import redstonelamp.cmd.Command;
+import redstonelamp.cmd.CommandRegistrationManager;
+import redstonelamp.cmd.CommandSender;
+import redstonelamp.cmd.ConsoleCommandSender;
+import redstonelamp.cmd.PluginCommand;
+import redstonelamp.cmd.PluginIdentifiableCommand;
+import redstonelamp.cmd.SimpleCommandMap;
+import redstonelamp.event.player.PlayerJoinEvent;
+import redstonelamp.event.player.PlayerMoveEvent;
 import redstonelamp.logger.Logger;
+import redstonelamp.plugin.PluginBase;
+import redstonelamp.plugin.PluginLoader;
+import redstonelamp.plugin.PluginManager;
+import redstonelamp.utils.RedstoneLampProperties;
 import redstonelamp.utils.StringCast;
 
 public class Server extends Thread {
 	private String address, name, motd, generator_settings, level_name, seed, level_type, rcon_pass;
 	private int port, spawn_protection, max_players, gamemode, difficulty;
 	private boolean whitelist, announce_player_achievements, allow_cheats, spawn_animals, spawn_mobs, force_gamemode, hardcore, pvp, query, rcon, auto_save;
+	
+	private CommandRegistrationManager commandManager;
+	private PluginManager pluginManager;
+	private SimpleCommandMap simpleCommandMap;
 	
 	private boolean isListening;
 	private RedstoneLamp redstone;
@@ -44,10 +63,10 @@ public class Server extends Thread {
 		this.hardcore = StringCast.toBoolean(hardcore);
 		this.pvp = StringCast.toBoolean(pvp);
 		this.difficulty = StringCast.toInt(difficulty);
-		this.generator_settings	= generator_settings;
-		this.level_name	= level_name;
+		this.generator_settings = generator_settings;
+		this.level_name = level_name;
 		this.seed = seed;
-		this.level_type	= level_type;
+		this.level_type = level_type;
 		this.query = StringCast.toBoolean(query);
 		this.rcon = StringCast.toBoolean(rcon);
 		this.rcon_pass = rcon_pass;
@@ -56,12 +75,50 @@ public class Server extends Thread {
 		try {
 			InetAddress ip = InetAddress.getLocalHost();
 			this.address = ip.getHostAddress();
-		} catch (UnknownHostException e) {
+		} catch(UnknownHostException e) {
 			this.getLogger().fatal("Unable to determine system IP!");
 		}
 		this.getLogger().info("Opening server on " + this.address + ":" + this.port);
 		this.getLogger().info("This server is running " + RedstoneLamp.SOFTWARE + " version " + RedstoneLamp.VERSION + " \"" + RedstoneLamp.CODENAME + "\" (API " + RedstoneLamp.API_VERSION + ")");
 		this.getLogger().info(RedstoneLamp.SOFTWARE + " is distributed under the " + RedstoneLamp.LICENSE);
+		
+		/*
+		 * Load each plug-in in the Plug-ins directory and create the directory
+		 * if it doesnt exist
+		 */
+		File folder = new File("./plugins");
+		if(!folder.exists())
+			folder.mkdirs();
+		
+		File inuse = new File("./plugins/cache".trim()); // class files are generated in this folder
+		if(!inuse.exists())
+			inuse.mkdirs();
+		inuse.deleteOnExit();
+		
+		PluginManager pluginManager = this.getPluginManager();// new
+		PluginLoader pluginLoader = new PluginLoader();
+		
+		// sets java SDK Location and PLUGIN_FOLDER
+		pluginLoader.setPluginOption("./plugins/".trim(), "./plugins/cache/".trim(), this.getRedstoneLampProperties().get("JAVA_SDK").trim());
+		pluginManager.registerPluginLoader(pluginLoader);
+		pluginManager.loadPlugins(folder);
+		
+		CommandSender sender = new ConsoleCommandSender();
+		
+		PlayerJoinEvent pje = new PlayerJoinEvent(null);
+		PlayerMoveEvent pme = new PlayerMoveEvent(null);
+		pluginManager.callEvent(pje);
+		pluginManager.callEvent(pme);
+		
+		String cmd = null;
+		ArrayList<Command> cmdList = this.getCommandRegistrationManager().getPluginCommands(cmd);
+		for(Command command : cmdList) {
+			PluginCommand pcmd = (PluginCommand) command;
+			PluginBase base = (PluginBase) pcmd.getPlugin();
+			if(base != null)
+				base.onCommand(sender, command, cmd, null);
+		}
+		
 		socket = new DatagramSocket(StringCast.toInt(port));
 		socket.getBroadcast();
 		serverID = rnd.nextLong();
@@ -79,10 +136,7 @@ public class Server extends Thread {
 				socket.receive(packet);
 				socket.setSoTimeout(0);
 				packetSize = packet.getLength();
-			} catch(Exception e) {
-				if(RedstoneLamp.DEVELOPER)
-					this.getLogger().debug("No packets recieved in the last 5 seconds");
-			}
+			} catch(Exception e) {} //No error messages are needed for this
 			
 			if(packetSize > 0) {
 				ByteBuffer b = ByteBuffer.wrap(packet.getData());
@@ -110,7 +164,6 @@ public class Server extends Thread {
 	public int getPort() {
 		return port;
 	}
-	
 	
 	/**
 	 * @return String MOTD
@@ -222,5 +275,34 @@ public class Server extends Thread {
 	 */
 	public Logger getLogger() {
 		return RedstoneLamp.logger;
+	}
+	
+	/**
+	 * @return CommandRegistrationManager
+	 */
+	public CommandRegistrationManager getCommandRegistrationManager() {
+		return commandManager;
+	}
+	
+	/**
+	 * @return PluginManager
+	 */
+	public PluginManager getPluginManager() {
+		return pluginManager;
+	}
+	
+	/**
+	 * return Plug-in commands
+	 */
+	public PluginIdentifiableCommand getPluginCommand(final String cmd) {
+		return commandManager.getPluginCommand(cmd);
+	}
+	
+	public SimpleCommandMap getCommandMap() {
+		return simpleCommandMap;
+	}
+	
+	public RedstoneLampProperties getRedstoneLampProperties() {
+		return new RedstoneLampProperties();
 	}
 }

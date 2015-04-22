@@ -24,7 +24,7 @@ public class Login07 extends Packet {
 	public Login07(DatagramPacket p, long serverID, RedstoneLamp server) {
 		ByteBuffer b = ByteBuffer.wrap(p.getData());
 		packetType = b.get();
-		if (packetType != 0x07) { return; }
+		if(packetType != 0x07) { return; }
 		
 		b.get(magic);
 		b.get(cookie);

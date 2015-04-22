@@ -30,7 +30,7 @@ public class Logger {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		System.out.println(sdf.format(cal.getTime()) + " [WARNING] " + message);
 	}
-
+	
 	public void error(String message) {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -42,5 +42,12 @@ public class Logger {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		System.out.println(sdf.format(cal.getTime()) + " [FATAL] " + message);
 		System.exit(1);
+	}
+	
+	public void dev(String message) {
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		if(RedstoneLamp.DEVELOPER)
+			System.out.println(sdf.format(cal.getTime()) + " [DEVELOPER] " + message);
 	}
 }

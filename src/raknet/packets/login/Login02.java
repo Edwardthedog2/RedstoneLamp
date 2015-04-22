@@ -16,7 +16,7 @@ public class Login02 extends Packet {
 	public Login02(DatagramPacket p, long serverID) {
 		ByteBuffer b = ByteBuffer.wrap(p.getData());
 		packetType = b.get();
-		if (packetType != 0x02) { return; }
+		if(packetType != 0x02) { return; }
 		clientID = b.getLong();
 		b.get(magic);
 		

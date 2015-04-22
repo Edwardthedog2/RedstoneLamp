@@ -17,7 +17,7 @@ public class Login05 extends Packet {
 	public Login05(DatagramPacket p, long serverID) {
 		ByteBuffer b = ByteBuffer.wrap(p.getData());
 		packetType = b.get();
-		if (packetType != 0x05) { return; }
+		if(packetType != 0x05) { return; }
 		
 		b.get(magic);
 		mtuSize = (short) p.getLength();

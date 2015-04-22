@@ -50,9 +50,9 @@ public class UseItemPacket extends Packet {
 	
 	private int getX() {
 		int r = x;
-		if (fx == 1.0f) {
+		if(fx == 1.0f) {
 			r += 1;
-		} else if (fx == 0.0f) {
+		} else if(fx == 0.0f) {
 			r -= 1;
 		}
 		return r;
@@ -60,9 +60,9 @@ public class UseItemPacket extends Packet {
 	
 	private int getY() {
 		int r = y;
-		if (fy == 1.0f) {
+		if(fy == 1.0f) {
 			r += 1;
-		} else if (fy == 0.0f) {
+		} else if(fy == 0.0f) {
 			r -= 1;
 		}
 		return r;
@@ -70,9 +70,9 @@ public class UseItemPacket extends Packet {
 	
 	private int getZ() {
 		int r = z;
-		if (fz == 1.0f) {
+		if(fz == 1.0f) {
 			r += 1;
-		} else if (fz == 0.0f) {
+		} else if(fz == 0.0f) {
 			r -= 1;
 		}
 		return r;
@@ -80,48 +80,48 @@ public class UseItemPacket extends Packet {
 	
 	@Override
 	public void process(PacketHandler h) {
-		if (!currentPos()) {
+		if(!currentPos()) {
 			getBlockData();
 			h.addToQueueForAll(getPacket());
 		}
 	}
 	
 	private boolean currentPos() {
-		if ((int) player.x == getX() && (int) player.y == getY() && (int) player.z == getZ()) { return true; }
+		if((int) player.x == getX() && (int) player.y == getY() && (int) player.z == getZ()) { return true; }
 		return false;
 	}
 	
 	private void getBlockData() {
 		System.out.println("ID: " + blockID + " X: " + fx + " Y: " + fy + " Z: " + fz);
-		if (blockID == 50) {
-			if (fx == 0.0f) {
+		if(blockID == 50) {
+			if(fx == 0.0f) {
 				blockData = 2;
-			} else if (fx == 1.0f) {
+			} else if(fx == 1.0f) {
 				blockData = 1;
 			}
 			
-			if (fy == 0.0f || fy == 1.0f) {
+			if(fy == 0.0f || fy == 1.0f) {
 				blockData = 0;
 			}
 			
-			if (fz == 0.0f) {
+			if(fz == 0.0f) {
 				blockData = 4;
-			} else if (fz == 1.0f) {
+			} else if(fz == 1.0f) {
 				blockData = 3;
 			}
-		} else if (blockID == 53 || blockID == 67 || blockID == 108) {
+		} else if(blockID == 53 || blockID == 67 || blockID == 108) {
 			int a = floor_double((double) ((player.yaw * 4f) / 360f) + 0.5D) & 3;
 			
-			if (a == 0) {
+			if(a == 0) {
 				blockData = 2;
 			}
-			if (a == 1) {
+			if(a == 1) {
 				blockData = 1;
 			}
-			if (a == 2) {
+			if(a == 2) {
 				blockData = 3;
 			}
-			if (a == 3) {
+			if(a == 3) {
 				blockData = 0;
 			}
 		}
@@ -129,6 +129,6 @@ public class UseItemPacket extends Packet {
 	
 	public static int floor_double(double d) {
 		int i = (int) d;
-		return d >= (double) i ? i : i - 1;
+		return d >= (double) i ? i:i - 1;
 	}
 }

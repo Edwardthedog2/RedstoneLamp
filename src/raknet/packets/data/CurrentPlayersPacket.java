@@ -40,8 +40,8 @@ public class CurrentPlayersPacket extends Packet {
 	
 	@Override
 	public void process(PacketHandler h) {
-		for (Player p : players) {
-			if (!p.clientAddress.equals(player.clientAddress) && p.clientPort != player.clientPort && p.isConnected) {
+		for(Player p : players) {
+			if(!p.clientAddress.equals(player.clientAddress) && p.clientPort != player.clientPort && p.isConnected) {
 				h.addToQueue(getPacket((Player) p));
 			}
 		}

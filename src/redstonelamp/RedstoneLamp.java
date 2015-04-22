@@ -16,7 +16,7 @@ public class RedstoneLamp implements Runnable {
 	public static String VERSION = "1.1.0";
 	public static String CODENAME = "Pumpkin Seeds";
 	public static String STAGE = "DEVELOPMENT";
-	public static int API_VERSION = 2;
+	public static double API_VERSION = 1.3;
 	public static String LICENSE = "GNU GENERAL PUBLIC LICENSE";
 	
 	private static RedstoneLamp redstone;

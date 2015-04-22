@@ -9,6 +9,7 @@ import java.util.Queue;
 
 import raknet.packets.login.*;
 import raknet.packets.data.*;
+import raknet.query.QueryPacket;
 import redstonelamp.Player;
 import redstonelamp.RedstoneLamp;
 import redstonelamp.Server;
@@ -39,7 +40,6 @@ public class PacketHandler implements Runnable {
 		if(packet != null) {
 			int packetType = (packet.getData()[0] & 0xFF);
 			int packetSize = packet.getData().length;
-			this.network.getLogger().debug("Packet from: " + clientAddress + ":" + clientPort + " with type: " + Integer.toHexString(packetType));
 			switch(packetType) {
 				case MinecraftPacket.ID_UNCONNECTED_PING_OPEN_CONNECTIONS_1:
 				case MinecraftPacket.ID_OPEN_CONNECTION_REQUEST_1:
@@ -48,11 +48,11 @@ public class PacketHandler implements Runnable {
 				break;
 				
 				case MinecraftPacket.NACK:
-					this.network.getLogger().debug("NACK from: " + clientAddress + ":" + clientPort + " with type: " + Integer.toHexString(packetType) + " and with size: " + packetSize);
+					this.network.getLogger().dev("NACK from: " + clientAddress + ":" + clientPort + " with type: " + Integer.toHexString(packetType) + " and with size: " + packetSize);
 				break;
 				
 				case MinecraftPacket.ACK:
-					this.network.getLogger().debug("ACK from: " + clientAddress + ":" + clientPort + " with type: " + Integer.toHexString(packetType) + " and with size: " + packetSize);
+					this.network.getLogger().dev("ACK from: " + clientAddress + ":" + clientPort + " with type: " + Integer.toHexString(packetType) + " and with size: " + packetSize);
 				break;
 				
 				case MinecraftPacket.CustomPacket_5:
@@ -67,12 +67,17 @@ public class PacketHandler implements Runnable {
 				case MinecraftPacket.CustomPacket_14:
 				case MinecraftPacket.CustomPacket_15:
 				case MinecraftPacket.CustomPacket_16:
-					this.network.getLogger().debug("DataPacket from: " + clientAddress + ":" + clientPort + " with type: " + Integer.toHexString(packetType) + " and with size: " + packetSize);
+					this.network.getLogger().dev("DataPacket from: " + clientAddress + ":" + clientPort + " with type: " + Integer.toHexString(packetType) + " and with size: " + packetSize);
 					dataPacketHandler();
 				break;
 				
+				case MinecraftPacket.ID_CONNECTED_PING_OPEN_CONNECTIONS:
+					this.network.getLogger().dev("QueryPacket from: " + clientAddress + ":" + clientPort + " with type: " + Integer.toHexString(packetType) + " and with size: " + packetSize);
+					new QueryPacket();
+				break;
+				
 				default:
-					this.network.getLogger().warn("UnknownPacket from: " + clientAddress + ":" + clientPort + " with type: " + Integer.toHexString(packetType) + " and with size: " + packetSize);
+					this.network.getLogger().dev("Unhandled packet: " + packetType);
 				break;
 			}
 		}
